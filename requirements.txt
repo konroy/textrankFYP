@@ -5,3 +5,4 @@ newspaper3k==0.2.8
 nltk==3.5
 sklearn==0.0
 networkx==2.5
+matplotlib==3.2.2
