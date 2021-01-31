@@ -1,5 +1,7 @@
 streamlit==0.73.0
-summa==1.2.0
 pandas==1.0.5
 numpy==1.18.5
 newspaper3k==0.2.8
+nltk==3.5
+sklearn==0.0
+networkx==2.5
