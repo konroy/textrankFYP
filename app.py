@@ -26,7 +26,6 @@ def inputURL():
 def tokenize(text):
 	doc_tokenizer = PunktSentenceTokenizer()
 	sentences_list = doc_tokenizer.tokenize(text)
-	#st.write(sentences_list)
 	return sentences_list
 
 def tdMatrix(sentence):
