@@ -26,13 +26,17 @@ def inputURL():
 def tokenize(text):
 	doc_tokenizer = PunktSentenceTokenizer()
 	sentences_list = doc_tokenizer.tokenize(text)
+	#st.write(sentences_list)
 	return sentences_list
 
 def tdMatrix(sentence):
 	cv = CountVectorizer()
 	cv_matrix = cv.fit_transform(sentence)
+
 	normal_matrix = TfidfTransformer().fit_transform(cv_matrix)
+
 	res_graph = normal_matrix * normal_matrix.T
+	st.write(res_graph.toarray())
 	return res_graph
 
 def nxGraph(graph):
@@ -45,7 +49,7 @@ def showGraph(nxgraph):
 	st.write("Number of Edges: {}".format(nxgraph.number_of_edges()))
 	st.write("Number of Nodes: {}".format(nxgraph.number_of_nodes()))
 
-def textrank(nx_graph,sentences_list):
+def textrank(nx_graph,sentences_list, threshold):
 	
 	ranks = nx.pagerank(nx_graph)
 	sentence_array = sorted(((ranks[i],s) for i, s in enumerate(sentences_list)), reverse=True)
@@ -65,12 +69,9 @@ def textrank(nx_graph,sentences_list):
 		for i in range(0, len(sentence_array)):
 			temp_array.append((float(sentence_array[i][0]) - rank_min) / (rank_max - rank_min))
 			df_temp.at[i,'Score'] = temp_array[i]
-	
+
 	st.header("Scoring")
 	st.table(df_temp)
-
-	threshold = (sum(temp_array) / len(temp_array)) + 0.2
-	st.write("The threshold of the summarization is ",threshold)
 	sentences_list = []
 	if len(temp_array) > 1:
 		for i in range(0, len(temp_array)):
@@ -88,6 +89,8 @@ def main():
 
 	text = st.text_area("Text", parse(url), height=500)
 
+	threshold = st.slider("Threshold", min_value=0.0, max_value=1.0, value=0.2, step=0.01)
+
 	st.title("Results")
 
 	sentences_list = tokenize(text)
@@ -95,7 +98,7 @@ def main():
 	res_graph = tdMatrix(sentences_list)
 	nx_graph = nxGraph(res_graph)
 
-	summary = textrank(nx_graph,sentences_list)
+	summary = textrank(nx_graph,sentences_list,threshold)
 
 	st.header("Summary")
 	for lines in summary:
