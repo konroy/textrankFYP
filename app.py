@@ -35,7 +35,6 @@ def tdMatrix(sentence):
 	normal_matrix = TfidfTransformer().fit_transform(cv_matrix)
 
 	res_graph = normal_matrix * normal_matrix.T
-	st.write(res_graph.toarray())
 	return res_graph
 
 def nxGraph(graph):
